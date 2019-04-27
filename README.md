@@ -1,3 +1,3 @@
 # TubesPBO
 
-Ini Tubes PBO
+Judul : Sistem Informasi Praktikum (Fisika dan Kimia)

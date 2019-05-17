@@ -90,7 +90,7 @@ public DefaultTableModel dtm;
             jScrollPane1.setViewportView(tblJdwl);
 
             jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
-            jLabel1.setText("Jadwal Praktikum Fisika dan Kimia");
+            jLabel1.setText("Jadwal Praktikum Fisika");
 
             jLabel3.setText("Kode Jadwal ");
 
@@ -133,7 +133,7 @@ public DefaultTableModel dtm;
             });
 
             jLabel8.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
-            jLabel8.setText("Edit Jadwal (Administrator)");
+            jLabel8.setText("Edit Jadwal");
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
             getContentPane().setLayout(layout);
@@ -209,7 +209,7 @@ public DefaultTableModel dtm;
                                 .addComponent(jButton3)))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                             .addComponent(jLabel1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -229,11 +229,12 @@ public DefaultTableModel dtm;
                 con = classKoneksi.getKoneksi();
                 st=con.createStatement();
                 st.executeUpdate("insert into jadwal "
-                    + "values('"+txtKdJdwl.getText()+"','"+txtWaktu.getText()+"',"
-                    + "'"+txtHari.getText()+"','"+txtTPB.getText()+"','"+txtKdLab.getText()+"')");
+                    + "values('"+txtKdJdwl.getText()+"', '"+txtHari.getText()+"', "
+                    + "'"+txtWaktu.getText()+"', '"+txtTPB.getText()+"', '"+txtKdLab.getText()+"') ");
             }catch (SQLException e) {
             System.out.println("gagal " +e);
             }
+            
         tampilJadwal();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

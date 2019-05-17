@@ -8,13 +8,14 @@ public class halAspr extends javax.swing.JFrame{
 public Statement st;
 public Connection con;
 public ResultSet rs;
-public DefaultTableModel dtmNilai;
+public DefaultTableModel dtmNilai, dtmJdwl;
 
     
     public halAspr() {
         initComponents();
         welcomeAspr();
         tampilTblNilai();
+        tampilTblJadwal();
     }
     
     private void welcomeAspr(){
@@ -30,10 +31,8 @@ public DefaultTableModel dtmNilai;
        
             con = classKoneksi.getKoneksi();
             st=con.createStatement();
-            rs=st.executeQuery("select praktikan.nim_praktikan, nama_praktikan, asprak.kd_matkul, nilai "
-                    + "from asprak natural join asprak_tpb, praktikan, penilaian "
-                    + "where asprak.nim_asprak='"+frmAwal.getPassAspr()+"' and asprak_tpb.tpb=praktikan.tpb and "
-                    + "asprak.kd_matkul=penilaian.kd_matkul and praktikan.nim_praktikan=penilaian.nim_praktikan ");
+            rs=st.executeQuery("select mhs.nim_mhs, nama_mhs, kd_matkul, nilai from asprak natural join mhs_nilai,mhs "
+                    + "where mhs.nim_mhs=mhs_nilai.nim_mhs and nim_asprak='"+frmAwal.passAspr+"' ");
             
             while (rs.next()){
                 String[] row = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)};
@@ -45,6 +44,29 @@ public DefaultTableModel dtmNilai;
         }
         tblPenilaian.setModel(dtmNilai);           
     }
+    
+    private void tampilTblJadwal(){
+      String[] header  = {"Hari", "Waktu", "Nama Ruang"};
+        dtmJdwl = new DefaultTableModel(null, header);
+        koneksi classKoneksi = new koneksi();
+        
+        try {
+       
+            con = classKoneksi.getKoneksi();
+            st=con.createStatement();
+            rs=st.executeQuery("select hari, waktu, nama_ruang from asprak natural join jadwal,lab "
+                    + "where nim_asprak='"+frmAwal.passAspr+"' and jadwal.kd_lab=lab.kd_lab ");
+            
+            while (rs.next()){
+                String[] row = {rs.getString(1), rs.getString(2), rs.getString(3)};
+                dtmJdwl.addRow(row);               
+            }  
+                
+        }catch (SQLException e) {
+            System.out.println("gagal " +e);
+        }
+        tblJdwlAspr.setModel(dtmJdwl);           
+    }
 
         
         
@@ -52,6 +74,8 @@ public DefaultTableModel dtmNilai;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPenilaian = new javax.swing.JTable()
@@ -61,12 +85,26 @@ public DefaultTableModel dtmNilai;
         jLabel1 = new javax.swing.JLabel();
         txtwcAspr = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblJdwlAspr = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setLocation(new java.awt.Point(400, 150));
-        setMinimumSize(new java.awt.Dimension(200, 200));
+        setLocation(new java.awt.Point(400, 100));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -98,13 +136,6 @@ public DefaultTableModel dtmNilai;
                 }
             });
 
-            jButton3.setText("Info Praktikum");
-            jButton3.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButton3ActionPerformed(evt);
-                }
-            });
-
             javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
             jPanel2.setLayout(jPanel2Layout);
             jPanel2Layout.setHorizontalGroup(
@@ -115,9 +146,7 @@ public DefaultTableModel dtmNilai;
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtwcAspr, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 270, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
             );
             jPanel2Layout.setVerticalGroup(
@@ -131,13 +160,8 @@ public DefaultTableModel dtmNilai;
                             .addContainerGap()
                             .addComponent(jLabel1)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(txtwcAspr, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(35, Short.MAX_VALUE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jButton3)
-                            .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(txtwcAspr, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(35, Short.MAX_VALUE))
             );
 
             jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
@@ -173,19 +197,53 @@ public DefaultTableModel dtmNilai;
                     .addGap(80, 80, 80))
             );
 
-            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-            getContentPane().setLayout(layout);
-            layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-            layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-            );
+            tblJdwlAspr = new javax.swing.JTable(){
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    if (columnIndex>=3){return true;}
+                    else return false;
+                }};
+                tblJdwlAspr.setBackground(new java.awt.Color(204, 204, 204));
+                tblJdwlAspr.setModel(new javax.swing.table.DefaultTableModel(
+                    new Object [][] {
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                    },
+                    new String [] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
+                    }
+                ));
+                jScrollPane3.setViewportView(tblJdwlAspr);
 
-            pack();
-        }// </editor-fold>//GEN-END:initComponents
+                jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
+                jLabel2.setText("Jadwal Anda");
+
+                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+                getContentPane().setLayout(layout);
+                layout.setHorizontalGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
+                layout.setVerticalGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
+
+                pack();
+            }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         koneksi classKoneksi = new koneksi();
@@ -200,22 +258,17 @@ public DefaultTableModel dtmNilai;
                 try{
                     con = classKoneksi.getKoneksi();
                     st=con.createStatement();
-                    st.executeUpdate("update penilaian set nilai="+nilai+" "
-                            + "where nim_praktikan='"+nimMhs+"' and kd_matkul='"+kdMk+"'");
+                    st.executeUpdate("update mhs_nilai set nilai="+nilai+" "
+                            + "where nim_mhs='"+nimMhs+"' and kd_matkul='"+kdMk+"'");
                     
                 }catch (SQLException e){
                     System.out.println("Failed "+e);
-                    JOptionPane.showMessageDialog(null, "Silahkan isi nilai yang masih kosong");
+                    JOptionPane.showMessageDialog(this, "Silahkan isi nilai yang masih kosong");
                 }
                 mark++;
             }
         tampilTblNilai();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        new infPrakAspr().setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         new frmAwal().setVisible(true);
@@ -259,12 +312,16 @@ public DefaultTableModel dtmNilai;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblJdwlAspr;
     private javax.swing.JTable tblPenilaian;
     private javax.swing.JLabel txtwcAspr;
     // End of variables declaration//GEN-END:variables
